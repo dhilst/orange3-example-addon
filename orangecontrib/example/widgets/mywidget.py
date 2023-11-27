@@ -1,4 +1,6 @@
-from Orange.data import Table
+from random import randint
+
+from Orange.data import Table, Domain, StringVariable, DiscreteVariable, ContinuousVariable
 from Orange.widgets import gui
 from Orange.widgets.settings import Setting
 from Orange.widgets.widget import OWWidget, Input, Output, Msg
@@ -44,7 +46,12 @@ class MyWidget(OWWidget):
             self.data = None
             
     def commit(self):
-        self.Outputs.data.send(self.data)
+        domain = Domain([ContinuousVariable("cv"), DiscreteVariable("dv")],
+            class_vars=[DiscreteVariable("dvClass")],
+            metas=[StringVariable("sv")])
+        table = Table.from_list(domain,
+            [[float(randint(0, 100)), randint(0, 100), randint(0, 100), str(randint(0, 100))] for i in range(10)])
+        self.Outputs.data.send(table)
     
     def send_report(self):
         # self.report_plot() includes visualizations in the report
